@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Dump RIFF structure and save data chunks to separate files
+#
+# usage: riffdump <file>
+#
+# script was written using http://www.saettler.com/RIFFMCI/riffmci.html
+#
+
+if [ $# -ne 1 ]; then
+    echo "usage:" `basename $0` "<file>" >&2
+    exit 2
+fi
+
+FILE=$1
+chunknum=0
+
+function chr
+{
+    echo `echo $1 | hexdump -n 1 -e '1/1 "%d"'`
+}
+
+function dword2int
+{
+    ex=`hexdump -n 4 -e '1/1 "%d + " 
+        1/1 "%d * 256 + " 
+        1/1 "%d * 256 * 256 + " 
+        1/1 "%d * 256 * 256 * 256"'`
+
+    ret=`eval 'echo \$[ $ex ]'`
+    echo $ret
+}
+
+function parsechunk
+{
+    local skip=$1
+    local parentlen=$2
+
+    local chid=`dd bs=2 count=2 skip=$skip if=$FILE 2>/dev/null`
+    local len=0
+
+    while [ -n "$chid" -a \( $parentlen -eq 0 -o $parentlen -gt $skip \) ]; do
+        echo chunk: $chid
+        case "$chid" in
+            RIFF)
+                len=`dd bs=2 count=2 skip=$[$skip+2] if=$FILE 2>/dev/null | dword2int`
+                echo len: $len
+                parsechunk $[ $skip + 4 ] $[ $skip + $len/2 + 4 ]
+                skip=$[ $skip + $len/2 + 4 ]
+                ;;
+
+            data)
+                len=`dd bs=2 count=2 skip=$[$skip+2] if=$FILE 2>/dev/null | dword2int`
+                echo len: $len
+                dd bs=2 count=$[ $len/2 ] skip=$[ $skip+4 ] if=$FILE of=$FILE.data.$chunknum 2>/dev/null
+                skip=$[ $skip+4+$len/2 ]
+                chunknum=$[ $chunknum+1 ]
+                ;;
+
+            WAVE)
+                skip=$[ $skip+2 ]
+                ;;
+
+            "LIST" | "fact" | "fmt ")
+                len=`dd bs=2 count=2 skip=$[$skip+2] if=$FILE 2>/dev/null | dword2int`
+                echo len: $len
+                skip=$[ $skip+4+$len/2 ] 
+                ;;
+        esac
+        chid=`dd bs=2 count=2 skip=$skip if=$FILE 2>/dev/null`
+    done
+}
+
+parsechunk 0 0

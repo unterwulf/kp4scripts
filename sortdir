@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Sort raw files order in the specified directories (for silly home devices)
+#
+
+if [ $# -eq 0 ]; then
+    echo "usage: $(basename $0) DIR ..." >2
+    exit 1
+fi
+
+for dir; do
+    srcdir=$(readlink -f "$dir")
+    tmpdir=$srcdir.sort.$$
+
+    mkdir "$tmpdir"
+
+    IFS=$'\n'
+    for file in $(ls "$srcdir" | sort); do
+        mv "$srcdir"/"$file" "$tmpdir"/"$file"
+    done
+
+    rmdir "$srcdir"
+    mv "$tmpdir" "$srcdir"
+done

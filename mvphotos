@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Move photos from source location and place them under separate directories
+# depending on date. One directory will be created for each day.
+#
+
+if [ $# -ne 2 ]; then
+    echo "usage: $(basename $0) SRCDIR DESTDIR" >&2
+    exit 1
+fi
+
+srcdir=$(readlink -f $1)
+dstdir=$(readlink -f $2)
+
+# create directories
+
+for date in $(find "$srcdir" -type f -exec stat -c %y "{}" \; | awk '{ print $1 }' | uniq)
+do
+   mkdir -v "$dstdir/$date"
+done
+
+# move files
+
+IFS=$'\n'
+for file in $(find "$srcdir" -type f -iname '*.jpg'); do
+   date=$(stat -c %y "$file" | awk '{ print $1 }')
+   mv -v "$file" "$dstdir/$date/"
+   chmod -x "$dstdir/$date/$(basename "$file")"
+done

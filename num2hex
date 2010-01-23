@@ -1,0 +1,32 @@
+#!/bin/bash
+
+be=0
+
+if [ $1 == "--be" ]; then
+    be=1
+    shift
+fi
+
+res=
+num=$1
+DIV=256
+
+function appendByte()
+{
+#    byte=`echo -en "\x$1"`
+    byte=$1
+
+    if [ $be -ne 0 ]; then
+        res="$byte $res"
+    else
+        res="$res $byte"
+    fi
+}
+
+while [ $num -gt 0 ]; do
+    rem=$[$num % $DIV]
+    appendByte $rem
+    num=$[$num / $DIV]
+done
+
+echo $res
