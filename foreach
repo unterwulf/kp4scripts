@@ -1,5 +1,23 @@
 #!/bin/sh
+#
+# Execute the specified command for each argument substituting value of 
+# argument instead of {}'s in the command
+#
+# This command should correctly handle arguments which values containing
+# <newline>s, <space>s, <tab>s or backslashes
+#
 
-for file in $(ls); do
-    eval $(echo "$*" | sed "s/{}/\"$file\"/g")
+if [ $# -le 1 -o "$1" = "-h" -o "$1" = "--help" ]; then
+    echo "usage: $(basename $0) CMD ARGS..." >&2
+    exit 1
+fi
+
+cmd=$1
+shift
+
+for file; do
+    # escape some special characters
+    file=$(echo "$file" | \
+        sed -n 'H;${x;s@\([\\/"$]\)@\\\1@g;s@\n@@;s@\n@\\n@g;p}')
+    eval "$(echo $cmd | sed "s/{}/$file/g")"
 done
