@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-# usage: re [-i] <command> <regexp> args ..
+# usage: re [-i] COMMAND REGEXP ARGS...
 #
 
 if [ $# -lt 3 ]; then
-  echo "usage: $(basename $0) [-i] <command> <regexp> args .." >&2
-  exit 2
+  echo "usage: $(basename $0) [-i] COMMAND REGEXP ARGS..." >&2
+  exit 1
 fi
 
 if [ "$1" == '-i' ]; then
