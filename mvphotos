@@ -21,7 +21,9 @@ done
 
 # move files
 
-IFS=$'\n'
+IFS='
+'
+
 for file in $(find "$srcdir" -type f -iname '*.jpg'); do
    date=$(stat -c %y "$file" | awk '{ print $1 }')
    mv -v "$file" "$dstdir/$date/"

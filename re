@@ -8,7 +8,7 @@ if [ $# -lt 3 ]; then
   exit 1
 fi
 
-if [ "$1" == '-i' ]; then
+if [ "$1" = '-i' ]; then
   inv=1
   shift
 else

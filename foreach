@@ -7,7 +7,7 @@
 # <newline>s, <space>s, <tab>s or backslashes
 #
 
-if [ $# -le 1 -o "$1" = "-h" -o "$1" = "--help" ]; then
+if [ $# -le 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "usage: $(basename $0) CMD ARGS..." >&2
     exit 1
 fi

@@ -10,7 +10,7 @@ for line in $(sed 's/[\t ]\+/ /' ~/.fstab); do
     IFS=' '
     set $line
     curmountpoint=$(readlink -f "$2" 2>/dev/null)
-    if [ "$curmountpoint" == "$mountpoint" ]; then
+    if [ "$curmountpoint" = "$mountpoint" ]; then
         IFS='#'
         set $1
         $1 $2 $mountpoint
