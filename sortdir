@@ -14,7 +14,7 @@ for dir; do
         exit 1
     fi
 
-    srcdir=$(readlink -f "$dir")
+    srcdir=$(readlink -f -- "$dir")
     tmpdir=$srcdir.sort.$$
 
     mkdir "$tmpdir"
