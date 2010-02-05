@@ -3,17 +3,26 @@
 # Mount FUSE filesystems by mount point using ~/.fstab file
 #
 
+FSTAB=~/.fstab
+
+if [ $# -ne 1 ]; then
+   echo "usage: $(basename $0) MOUNTPOINT" >&2
+   exit 1
+fi
+
 # mountpoint will contain absolute mountpoint path with all backslashes
 # and double-quotes escaped
 mountpoint=$(readlink -f -- "$1" | sed 's/["\]/\\&/g')
 
-fs=$(awk "{ if (\$2 == \"$mountpoint\") { print \$1; exit } }" ~/.fstab)
+fs=$(awk "{ if (\$2 == \"$mountpoint\") { print \$1; exit } }" $FSTAB)
 
 if [ -n "$fs" ]; then
    IFS='#'
    set $fs
    "$1" "$2" $mountpoint
    exit $?
+else
+   echo "$(basename $0): can't find $1 in $FSTAB" >&2
 fi
 
 exit 1
