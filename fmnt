@@ -1,21 +1,19 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Mount FUSE filesystems by mount point using ~/.fstab file
 #
 
-IFS=$'\n'
-mountpoint=$(readlink -f "$1")
+# mountpoint will contain absolute mountpoint path with all backslashes
+# and double-quotes escaped
+mountpoint=$(readlink -f -- "$1" | sed 's/["\]/\\&/g')
 
-for line in $(sed 's/[\t ]\+/ /' ~/.fstab); do
-    IFS=' '
-    set $line
-    curmountpoint=$(readlink -f "$2" 2>/dev/null)
-    if [ "$curmountpoint" = "$mountpoint" ]; then
-        IFS='#'
-        set $1
-        $1 $2 $mountpoint
-        exit $?
-    fi
-done
+fs=$(awk "{ if (\$2 == \"$mountpoint\") { print \$1; exit } }" ~/.fstab)
+
+if [ -n "$fs" ]; then
+   IFS='#'
+   set $fs
+   "$1" "$2" $mountpoint
+   exit $?
+fi
 
 exit 1
