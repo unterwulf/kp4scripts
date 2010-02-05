@@ -48,3 +48,6 @@ while [ 1 ]; do
    fi
    sleep $delay
 done
+
+echo "$(basename $0): host $host has not become available" >&2
+exit 1
