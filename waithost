@@ -43,7 +43,7 @@ while [ 1 ]; do
       exit $?
    fi
    attempt=$(echo $attempt+1 | bc)
-   if [ $maxattempts -ne 0 ] || [ $attempt -gt $maxattempts ]; then
+   if [ $maxattempts -ne 0 ] && [ $attempt -gt $maxattempts ]; then
       break
    fi
    sleep $delay
