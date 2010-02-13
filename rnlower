@@ -4,20 +4,21 @@
 #
 
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    echo "usage: $(basename $0) FILE..." >&2
-    exit 1
+   echo "usage: $(basename $0) FILE..." >&2
+   exit 1
 fi
 
 for file; do
-    dirname=$(dirname "$file")
-    basename=$(basename "$file")
-    newname=$(echo "$basename" | tr [:upper:] [:lower:])
-    if [ "$basename" = "$newname" ]; then
-        # do nothing, just silently skip the file
-        continue
-    elif [ ! -f "$dirname/$newname" ]; then
-        mv -- "$file" "$dirname/$newname"
-    else
-        echo "file '$dirname/$newname' already exists, skipping '$file'" >&2
-    fi
+   dirname=$(dirname -- "$file")
+   basename=$(basename -- "$file")
+   newname=$(echo "$basename" | tr [:upper:] [:lower:])
+   if [ "$basename" = "$newname" ]; then
+      # do nothing, just silently skip the file
+      continue
+   elif [ ! -f "$dirname/$newname" ]; then
+      mv -- "$file" "$dirname/$newname"
+   else
+      echo "$(basename $0): '$dirname/$newname' already exists," \
+           "skipping '$file'" >&2
+   fi
 done
