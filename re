@@ -3,7 +3,7 @@
 # usage: re [-i] COMMAND REGEXP ARGS...
 #
 
-if [ $# -lt 3 ]; then
+if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
   echo "usage: $(basename $0) [-i] COMMAND REGEXP ARGS..." >&2
   exit 1
 fi
@@ -21,8 +21,8 @@ shift 2
 
 for par; do
   if [ $inv -eq 1 ]; then
-    $command "$(echo "$par" | sed -e "$regex")" "$par"
+    $command "$(echo "$par" | sed "$regex")" "$par"
   else
-    $command "$par" "$(echo "$par" | sed -e "$regex")"
+    $command "$par" "$(echo "$par" | sed "$regex")"
   fi
 done
