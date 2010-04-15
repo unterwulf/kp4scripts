@@ -6,5 +6,5 @@
 dir1=$1
 dir2=$2
 
-diff <(cd $dir1; find . \! -type d -exec stat -c "%n %s" {} \; | sort | tr [:upper:] [:lower:]) \
-     <(cd $dir2; find . \! -type d -exec stat -c "%n %s" {} \; | sort | tr [:upper:] [:lower:])
+diff <(cd "$dir1"; find . \! -type d -exec stat -c "%n %s" {} \; | sort | tr [:upper:] [:lower:]) \
+     <(cd "$dir2"; find . \! -type d -exec stat -c "%n %s" {} \; | sort | tr [:upper:] [:lower:])
