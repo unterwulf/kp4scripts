@@ -1,6 +1,10 @@
 #!/bin/sh
 #
-# Poll remote host and execute the command if the host is reacheable
+# Poll remote host until it become available or maxattemps is reached
+#
+# Exit status:
+# 0  The host is available
+# 1  The host is not available and max attempts is reached
 #
 
 maxattempts=0
@@ -16,8 +20,8 @@ while [ $# -gt 1 ]; do
    shift
 done
 
-if [ $# -lt 2 ]; then
-   echo "usage: $(basename $0) [-m MAX] [-d DELAY] HOST CMD" >&2
+if [ $# -ne 1 ]; then
+   echo "usage: $(basename $0) [-m MAX] [-d DELAY] HOST" >&2
    exit 1
 fi
 
@@ -26,16 +30,9 @@ shift
 attempt=1
 
 while [ 1 ]; do
-   ping -q -c 4 "$host" >/dev/null 2>&1
-   retval=$?
-   if [ $retval -eq 0 ]; then
-      "$@"
-      exit $?
-   fi
-   attempt=$(echo $attempt+1 | bc)
-   if [ $maxattempts -ne 0 ] && [ $attempt -gt $maxattempts ]; then
-      break
-   fi
+   ping -q -c 4 "$host" >/dev/null 2>&1 && exit 0
+   attempt=$(expr $attempt + 1)
+   [ $maxattempts -ne 0 ] && [ $attempt -gt $maxattempts ] && break
    sleep $delay
 done
 
