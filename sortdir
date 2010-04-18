@@ -4,25 +4,25 @@
 #
 
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    echo "usage: $(basename $0) DIR..." >&2
-    exit 1
+   echo "usage: $(basename $0) DIR..." >&2
+   exit 1
 fi
 
 for dir; do
-    if [ ! -d "$dir" ]; then
-        echo "$(basename $0): '$dir' doesn't exist or is not a directory" >&2
-        exit 1
-    fi
+   if [ ! -d "$dir" ]; then
+      echo "$(basename $0): '$dir' doesn't exist or is not a directory" >&2
+      exit 1
+   fi
 
-    srcdir=$(readlink -f -- "$dir")
-    tmpdir=$srcdir.sort.$$
+   srcdir=$(readlink -f -- "$dir")
+   tmpdir=$srcdir.sort.$$
 
-    if ! mkdir "$tmpdir"; then
-        echo "$(basename $0): unable to create temporal directory '$tmpdir'" >&2
-        exit 1
-    fi
+   if ! mkdir "$tmpdir"; then
+      echo "$(basename $0): unable to create temporal directory '$tmpdir'" >&2
+      exit 1
+   fi
 
-    mv "$srcdir"/.[!.]* "$srcdir"/* "$tmpdir" 2>/dev/null
-    rmdir "$srcdir"
-    mv "$tmpdir" "$srcdir"
+   mv "$srcdir"/.[!.]* "$srcdir"/* "$tmpdir" 2>/dev/null
+   rmdir "$srcdir"
+   mv "$tmpdir" "$srcdir"
 done

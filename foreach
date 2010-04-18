@@ -8,16 +8,16 @@
 #
 
 if [ $# -le 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    echo "usage: $(basename $0) CMD ARGS..." >&2
-    exit 1
+   echo "usage: $(basename $0) CMD ARGS..." >&2
+   exit 1
 fi
 
 cmd=$1
 shift
 
 for file; do
-    # escape some special characters
-    file=$(echo "$file" | \
-        sed -n 'H;${x;s@[\\/"$]@\\&@g;s/\n//;s/\n/\\n/g;p}')
-    eval "$(echo "$cmd" | sed "s/{}/$file/g")"
+   # escape some special characters
+   file=$(echo "$file" | \
+       sed -n 'H;${x;s@[\\/"$]@\\&@g;s/\n//;s/\n/\\n/g;p}')
+   eval "$(echo "$cmd" | sed "s/{}/$file/g")"
 done
