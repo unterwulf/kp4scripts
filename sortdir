@@ -17,12 +17,12 @@ for dir; do
     srcdir=$(readlink -f -- "$dir")
     tmpdir=$srcdir.sort.$$
 
-    mkdir "$tmpdir"
+    if ! mkdir "$tmpdir"; then
+        echo "$(basename $0): unable to create temporal directory '$tmpdir'" >&2
+        exit 1
+    fi
 
-    find "$srcdir" -mindepth 1 -maxdepth 1 -xdev -print0 | sort -z | \
-        xargs -0 -n 1 \
-        sh -c "mv \"\$1\" \"$tmpdir\"/\"\$(basename \"\$1\")\"" sh
-
+    mv "$srcdir"/.[!.]* "$srcdir"/* "$tmpdir" 2>/dev/null
     rmdir "$srcdir"
     mv "$tmpdir" "$srcdir"
 done
