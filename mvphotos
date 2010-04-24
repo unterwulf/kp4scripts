@@ -14,7 +14,7 @@ dstdir=$(readlink -f -- "$2")
 
 # create directories
 
-for date in $(find "$srcdir" -type f -exec stat -c %y "{}" \; | awk '{ print $1 }' | uniq)
+for date in $(find "$srcdir" -type f -exec stat -c %y "{}" \; | awk '{ print $1 }' | sort -u)
 do
    mkdir -v "$dstdir/$date"
 done
