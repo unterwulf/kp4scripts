@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Convert NRG image to ISO image
+#
+
+if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+   echo "usage: $(basename $0) NRGFILE ISOFILE" >&2
+   exit 1
+fi
+
+exec dd bs=1024 skip=1 if="$1" of="$2"
