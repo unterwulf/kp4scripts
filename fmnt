@@ -11,12 +11,22 @@ if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 fi
 
 mountpoint=$(readlink -f -- "$1")
-fs=$(awk -v mp="$mountpoint" '$2 == mp { print $1; exit }' $FSTAB)
+cmd=$(awk -v mp="$mountpoint" -f - -- "$FSTAB" <<"EOF"
+$2 == mp {
+   if ($4)
+      opts = "-o " $4
 
-if [ -n "$fs" ]; then
-   IFS='#'
-   set $fs
-   exec "$1" "$2" $mountpoint
+   FS="#"
+   $0=$1
+
+   print $1 " " $2 " " mp " " opts
+   exit
+}
+EOF
+)
+
+if [ -n "$cmd" ]; then
+   exec $cmd
 else
    echo "$(basename $0): can't find $1 in $FSTAB" >&2
 fi
