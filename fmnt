@@ -25,10 +25,9 @@ $2 == mp {
 EOF
 )
 
-if [ -n "$cmd" ]; then
-   exec $cmd
-else
+if [ -z "$cmd" ]; then
    echo "$(basename $0): can't find $1 in $FSTAB" >&2
+   exit 1
 fi
 
-exit 1
+exec $cmd
