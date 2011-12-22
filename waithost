@@ -10,13 +10,19 @@
 maxattempts=0
 delay=10
 
+fatal()
+{
+   echo "$(basename $0): $*" >&2
+   exit 1
+}
+
 while [ $# -gt 0 ]; do
    case $1 in
       -m) shift; maxattempts=$1;;
       -d) shift; delay=$1;;
       -h|--help) shift $#;;
       --) shift; break;;
-      -*) echo "$(basename $0): invalid option '$1'" >&2; exit 1;;
+      -*) fatal "invalid option '$1'";;
       *)  break;;
    esac
    shift
@@ -37,5 +43,4 @@ while :; do
    sleep $delay
 done
 
-echo "$(basename $0): host $host has not become available" >&2
-exit 1
+fatal "host $host has not become available"
