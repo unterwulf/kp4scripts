@@ -36,11 +36,12 @@ fi
 host=$1
 attempt=1
 
-while :; do
-   ping -q -c 4 "$host" >/dev/null 2>&1 && exit 0
+while ! ping -q -c 4 "$host" >/dev/null 2>&1; do
    attempt=$(expr $attempt + 1)
-   [ $maxattempts -ne 0 ] && [ $attempt -gt $maxattempts ] && break
+   if [ $maxattempts -ne 0 ] && [ $attempt -gt $maxattempts ]; then
+      fatal "host $host has not become available"
+   fi
    sleep $delay
 done
 
-fatal "host $host has not become available"
+exit 0
