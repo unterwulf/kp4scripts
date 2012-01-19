@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Unmount FUSE file system (just a shortcut)
+#
+
+exec fusermount -u "$1"
