@@ -3,4 +3,4 @@
 # Shortcut for the hexdump -C command.
 #
 
-exec LANG=C hexdump -C "$@"
+LANG=C exec hexdump -C "$@"
