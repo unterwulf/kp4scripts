@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Shortcut for the hexdump -C command.
+#
+
+exec LANG=C hexdump -C "$@"
