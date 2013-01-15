@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# List mp3 files with details from ID3 tags.
+#
+
+# Collect option arguments
+opts=
+while [ $# -ne 0 ]; do
+   case $1 in
+      -*) opts="$opts $1"; shift;;
+      *) break;;
+   esac
+done
+
+[ $# -eq 0 ] && set *.mp3 && [ "$1" = '*.mp3' ] && exit 0
+
+for file; do
+   id321 -f '%a - %l (%y) - %.2n - %t' $opts "$file"
+done
