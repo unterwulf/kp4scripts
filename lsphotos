@@ -3,7 +3,7 @@
 # List photos with detailed timestamp information.
 #
 
-[ $# -eq 0 ] && set *.jpg && [ $1 = '*.jpg' ] && exit 0
+[ $# -eq 0 ] && set *.jpg && [ "$1" = '*.jpg' ] && exit 0
 
 for file; do
    timestamp=$(exiv2 -Pt -g Exif.Photo.DateTimeOriginal "$file")

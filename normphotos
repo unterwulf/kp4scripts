@@ -3,7 +3,7 @@
 # Normalize photos (fix orientation, name, and mtime).
 #
 
-[ $# -eq 0 ] && set *.jpg && [ $1 = '*.jpg' ] && exit 0
+[ $# -eq 0 ] && set *.jpg && [ "$1" = '*.jpg' ] && exit 0
 
 for file; do
    exifautotran "$file"
