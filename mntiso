@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Shortcut for mounting an ISO image.
+#
+
+exec fuseiso -n -p -c cp1251 "$1" ~/mnt/iso

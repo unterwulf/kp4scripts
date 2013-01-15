@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Shortcut for unmounting an ISO image.
+#
+
+exec fusermount -u ~/mnt/iso
