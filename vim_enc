@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Open a file in vim with specified encoding.
+#
+# This is a metascript that finds encoding name in its filename.
+# It means that it should be used as a base for creating
+# autocompletion-friendly vim aliases with the ln command.
+#
+# E.g. ln -s vim_enc vim_cp866
+#
+
+enc=${0##*vim_}
+
+if [ x$enc = xenc ]; then
+   echo "This script is not meant to be called directly." >&2
+elif [ $# -ne 1 ]; then
+   echo "usage: ${0##*/} FILE" >&2
+else
+   exec vim -c":e ++enc=$enc" "$1"
+fi
+
+exit 1
