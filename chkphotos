@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Check that Exif metadata of photo is consistent with its name and mtime.
+#
+
+[ $# -eq 0 ] && set *.jpg && [ $1 = '*.jpg' ] && exit 0
+
+for file; do
+   timestamp=$(exiv2 -Pt -g Exif.Photo.DateTimeOriginal "$file" | tr -d '[: ]')
+   : ${timestamp:="--------------"}
+   mtime=$(stat -c "%y" "$file" | tr -d '[: \-]')
+   mtime=${mtime%.*}
+   notdir=${file##*/}
+   name=$(echo "${notdir%.*}" | sed 's/\([0-9]\+_[0-9]\+_\)[^_]\+$/\1/;s/_//g')
+   if [ "$timestamp" != "$mtime" ] || [ "$timestamp" != "$name" ]; then
+      printf "%-14s %-14s %-14.14s %s\n" "$timestamp" "$mtime" "$name" "$file"
+   fi
+done
