@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Build cscope database for the current directory with respect to
+# symbolic links
+#
+
+if [ $# -gt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "usage: ${0##*/} [-a]" >&2
+  exit 1
+fi
+
+# Read list of directories
+[ -f "cscope.dirs" ] && dirs=`cat cscope.dirs` || dirs=.
+
+if [ "$1" = "-a" ]; then
+  raw_dirs=$dirs
+  dirs=
+  for d in $raw_dirs; do
+    dirs="$dirs `readlink -e $d`"
+  done
+fi
+
+find -L $dirs -name \*.[chCH] -o -name \*.[ch]pp -o -name \*.cc > cscope.files
+cscope -b -i cscope.files
