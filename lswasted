@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# List apparent size of file, disk usage and amount of wasted space.
+#
+
+[ $# -eq 0 ] && set * && [ "$1" = '*' ] && exit 0
+
+for f; do
+   apparent=$(du -b -- "$f" | cut -f1)
+   usage=$(du -B 1 -- "$f" | cut -f1)
+   wasted=$((usage - apparent))
+   printf "%13d %13d %9d %s\n" $apparent $usage $wasted "$f"
+done
