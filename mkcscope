@@ -20,5 +20,5 @@ if [ "$1" = "-a" ]; then
   done
 fi
 
-find -L $dirs -name \*.[chCH] -o -name \*.[ch]pp -o -name \*.cc > cscope.files
+find -L $dirs -name \*.[chCH] -o -name \*.[ch]pp -o -name \*.cc -o -name \*.hh > cscope.files
 cscope -b -i cscope.files
