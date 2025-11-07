@@ -15,7 +15,7 @@ for file; do
    if [ "$basename" = "$newname" ]; then
       # do nothing, just silently skip the file
       continue
-   elif [ ! -f "$dirname/$newname" ]; then
+   elif [ ! -e "$dirname/$newname" ]; then
       mv -- "$file" "$dirname/$newname"
    else
       echo "$(basename $0): '$dirname/$newname' already exists," \
