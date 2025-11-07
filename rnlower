@@ -11,7 +11,7 @@ fi
 for file; do
    dirname=$(dirname -- "$file")
    basename=$(basename -- "$file")
-   newname=$(echo "$basename" | tr [:upper:] [:lower:])
+   newname=$(echo "$basename" | tr '[:upper:]' '[:lower:]')
    if [ "$basename" = "$newname" ]; then
       # do nothing, just silently skip the file
       continue
